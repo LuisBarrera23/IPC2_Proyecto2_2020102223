@@ -1,4 +1,6 @@
-from tkinter import Button, Tk,ttk
+from tkinter import Button, Tk,ttk,Label,filedialog
+from PIL import Image,ImageTk
+from xml.dom import minidom
 
 
 #variables globales
@@ -26,13 +28,21 @@ def generarVentana():
     pestaña2 = ttk.Frame(pestañas)
     pestaña3 = ttk.Frame(pestañas)
 
-    
+    #contenido pestaña 1 de cargar archivos
     pestañas.add(pestaña1, text="Cargar Archivo")
+    b1=Button(pestaña1,command=lecturaMaquina,text="Cargar XML Configuración de Maquina",font=("Verdana",12),borderwidth=5,background="beige").place(x=300,y=500,height=40,width=350)
+    b2=Button(pestaña1,command=lecturaSimulacion,text="Cargar XML Configuración",font=("Verdana",12),borderwidth=5,background="beige").place(x=300,y=550,height=40,width=350)
+    img=Image.open("complementos\Brazos.jpg")
+    imagen=ImageTk.PhotoImage(img)
+    label=Label(pestaña1,width=836,height=400,image=imagen,anchor="center")
+    label.image=imagen
+    label.place(x=182,y=70)
+    #contenido de pestaña 2 de Reportes
     pestañas.add(pestaña2, text="Reportes")
+    #contenido de pestaña 3 de Ayuda
     pestañas.add(pestaña3, text="Ayuda")
 
-    b1=Button(pestaña1,text="Cargar XML Configuración de Maquina",font=("Verdana",12),borderwidth=5,background="beige").place(x=300,y=250,height=40,width=350)
-    b1=Button(pestaña1,text="Cargar XML Configuración",font=("Verdana",12),borderwidth=5,background="beige").place(x=300,y=300,height=40,width=350)
+    
 
     pestañas.pack(fill="both",expand="yes")
 
@@ -40,6 +50,25 @@ def generarVentana():
     
     ventana.mainloop()
 
+def lecturaMaquina():
+    print("configuracion de la maquina")
+    ruta=filedialog.askopenfile(
+        title="Por favor seleccine un archivo",
+        initialdir="./",
+        filetypes=(
+            ("Archivo XML","*.xml"),("Todos los archivos","*.*")
+        )
+    )
+    print(ruta)
+    cadena=ruta.read().lower()
+    ruta.close()
+    print(cadena)
+    documento=minidom.parseString(cadena)
+
+
+
+def lecturaSimulacion():
+    print("estructurando simulación")
 
 if __name__=='__main__':
     generarVentana()
