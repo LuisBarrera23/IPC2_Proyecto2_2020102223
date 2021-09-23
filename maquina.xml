@@ -1,0 +1,29 @@
+<Maquina> 
+	<CantidadLineasProduccion>2</CantidadLineasProduccion> 
+		<ListadoLineasProduccion> 
+			<LineaProduccion> 
+				<Numero>1</Numero> 
+				<CantidadComponentes>4</CantidadComponentes> 
+				<TiempoEnsamblaje>1</TiempoEnsamblaje> 
+			</LineaProduccion> 
+			<LineaProduccion> 
+				<Numero>2</Numero> 
+				<CantidadComponentes>6</CantidadComponentes> 
+				<TiempoEnsamblaje>1</TiempoEnsamblaje> 
+			</LineaProduccion>
+		</ListadoLineasProduccion> 
+		<ListadoProductos> 
+			<Producto> 
+				<nombre>Smartwatch</nombre> 
+				<elaboracion>L1C2 L2C1 L2C2 L1C4</elaboracion> 
+			</Producto> 
+			<Producto> 
+				<nombre>Camara</nombre> 
+				<elaboracion>L1C2 L2C3 L1C4 L2C2</elaboracion> 
+			</Producto>
+			<Producto> 
+				<nombre>USBStick</nombre> 
+				<elaboracion>L1C1 L2C3</elaboracion> 
+			</Producto>
+		</ListadoProductos> 
+</Maquina>

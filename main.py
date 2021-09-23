@@ -1,10 +1,13 @@
 from tkinter import Button, Tk,ttk,Label,filedialog
 from PIL import Image,ImageTk
 from xml.dom import minidom
+from ListaLineas import listalineas
+from Linea import linea
 
 
 #variables globales
 ventana=Tk()
+Lineas=listalineas()
 
 def generarVentana():
     global ventana
@@ -51,6 +54,8 @@ def generarVentana():
     ventana.mainloop()
 
 def lecturaMaquina():
+    global Lineas
+    Lineas=listalineas()
     print("configuracion de la maquina")
     ruta=filedialog.askopenfile(
         title="Por favor seleccine un archivo",
@@ -59,11 +64,28 @@ def lecturaMaquina():
             ("Archivo XML","*.xml"),("Todos los archivos","*.*")
         )
     )
-    print(ruta)
     cadena=ruta.read().lower()
     ruta.close()
-    print(cadena)
     documento=minidom.parseString(cadena)
+
+    cantidadLineas=documento.getElementsByTagName("cantidadlineasproduccion")[0].firstChild.data
+    print("cantidad de lineas de produccion:",cantidadLineas)
+    lLineas=documento.getElementsByTagName("lineaproduccion")
+    for l in lLineas:
+        numero=int(l.getElementsByTagName("numero")[0].firstChild.data)
+        cantidadC=int(l.getElementsByTagName("cantidadcomponentes")[0].firstChild.data)
+        tiempoE=int(l.getElementsByTagName("tiempoensamblaje")[0].firstChild.data)
+        nuevalinea=linea(numero,cantidadC)
+        Lineas.insertar(nuevalinea)
+        print("Linea:",numero,"con:",cantidadC,"componentes y tarda en ensamblar:",tiempoE,"segundos")
+    Lineas.recorrer()
+
+    lProductos=documento.getElementsByTagName("producto")
+    for p in lProductos:
+        nombre=str(p.getElementsByTagName("nombre")[0].firstChild.data)
+        elaboracion=str(p.getElementsByTagName("elaboracion")[0].firstChild.data)
+        print("producto:",nombre,"se elabora asi:",elaboracion)
+
 
 
 
