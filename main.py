@@ -1,13 +1,31 @@
+from ListaProceso import listaproceso
 from tkinter import Button, Tk,ttk,Label,filedialog
 from PIL import Image,ImageTk
 from xml.dom import minidom
 from ListaLineas import listalineas
 from Linea import linea
+from ListaProductos import listaproductos
+from Producto import producto
+from Proceso import proceso
 
 
 #variables globales
 ventana=Tk()
 Lineas=listalineas()
+Productos=listaproductos()
+
+#funciones complementarias
+def isNumero(C):
+    if ((ord(C) >= 48 and ord(C) <= 57)):
+        return True
+    else:
+        return False
+
+def isEspacio(C):
+    if (ord(C)==32 or ord(C)==9 or ord(C)==10):
+        return True
+    else:
+        return False
 
 def generarVentana():
     global ventana
@@ -54,8 +72,9 @@ def generarVentana():
     ventana.mainloop()
 
 def lecturaMaquina():
-    global Lineas
+    global Lineas,Productos
     Lineas=listalineas()
+    Productos=listaproductos()
     print("configuracion de la maquina")
     ruta=filedialog.askopenfile(
         title="Por favor seleccine un archivo",
@@ -77,20 +96,76 @@ def lecturaMaquina():
         tiempoE=int(l.getElementsByTagName("tiempoensamblaje")[0].firstChild.data)
         nuevalinea=linea(numero,cantidadC)
         Lineas.insertar(nuevalinea)
-        print("Linea:",numero,"con:",cantidadC,"componentes y tarda en ensamblar:",tiempoE,"segundos")
-    Lineas.recorrer()
+        #print("Linea:",numero,"con:",cantidadC,"componentes y tarda en ensamblar:",tiempoE,"segundos")
+    #Lineas.recorrer()
+    #actual=Lineas.primero.linea.numero
+    #print(actual)
 
     lProductos=documento.getElementsByTagName("producto")
     for p in lProductos:
         nombre=str(p.getElementsByTagName("nombre")[0].firstChild.data)
         elaboracion=str(p.getElementsByTagName("elaboracion")[0].firstChild.data)
-        print("producto:",nombre,"se elabora asi:",elaboracion)
+        
+        #automata para la lectura de la elaboración
+        estado=0
+        numero=""
+        progre=listaproceso()
+        for c in elaboracion:
+            if isEspacio(c):
+                continue
+            if estado==0:
+                if c=="l":
+                    estado=1
+            elif estado==1:
+                if isNumero(c):
+                    numero+=c
+                    estado=1
+                if c=="p":
+                    #print("linea:",int(numero),end=" ")
+                    l=int(numero)
+                    estado=2
+                    numero=""
+            elif estado==2:
+                if c=="c":
+                    estado=3
+            elif estado==3:
+                if isNumero(c):
+                    numero+=c
+                    estado=3
+                if c=="p":
+                    c=int(numero)
+                    #print("componente",int(numero))
+                    nuevoproceso=proceso(l,c)
+                    progre.insertar(nuevoproceso)
+                    estado=0
+                    numero=""
+        nuevoproducto=producto(nombre,elaboracion,progre)
+        Productos.insertar(nuevoproducto)
+        #print("producto:",nombre,"se elabora asi:",elaboracion)
+    #Productos.recorrer()
 
 
 
 
 def lecturaSimulacion():
     print("estructurando simulación")
+    ruta=filedialog.askopenfile(
+        title="Por favor seleccine un archivo",
+        initialdir="./",
+        filetypes=(
+            ("Archivo XML","*.xml"),("Todos los archivos","*.*")
+        )
+    )
+    cadena=ruta.read().lower()
+    ruta.close()
+    documento=minidom.parseString(cadena)
+
+    nombre=documento.getElementsByTagName("nombre")[0].firstChild.data
+    print(nombre)
+    lProductos=documento.getElementsByTagName("producto")
+    for p in lProductos:
+        nombre_p=p.firstChild.data
+        print(nombre_p)
 
 if __name__=='__main__':
     generarVentana()
