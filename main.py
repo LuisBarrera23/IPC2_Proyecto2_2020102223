@@ -7,12 +7,16 @@ from Linea import linea
 from ListaProductos import listaproductos
 from Producto import producto
 from Proceso import proceso
+from ListaSimulacion import listasimulacion
+from Simulacion import simulacion
+from lsimulacionp import listasimulacionp
 
 
 #variables globales
 ventana=Tk()
 Lineas=listalineas()
 Productos=listaproductos()
+Simulaciones=listasimulacion()
 
 #funciones complementarias
 def isNumero(C):
@@ -148,6 +152,7 @@ def lecturaMaquina():
 
 
 def lecturaSimulacion():
+    global Simulaciones
     print("estructurando simulación")
     ruta=filedialog.askopenfile(
         title="Por favor seleccine un archivo",
@@ -161,11 +166,16 @@ def lecturaSimulacion():
     documento=minidom.parseString(cadena)
 
     nombre=documento.getElementsByTagName("nombre")[0].firstChild.data
-    print(nombre)
+    #print(nombre)
     lProductos=documento.getElementsByTagName("producto")
+    listap=listasimulacionp()
     for p in lProductos:
         nombre_p=p.firstChild.data
-        print(nombre_p)
+        listap.insertar(nombre_p)
+        #print(nombre_p)
+    nuevasimulacion=simulacion(nombre,listap)
+    Simulaciones.insertar(nuevasimulacion)
+    #Simulaciones.recorrer()
 
 if __name__=='__main__':
     generarVentana()
