@@ -1,15 +1,15 @@
 <Maquina> 
-	<CantidadLineasProduccion>2</CantidadLineasProduccion> 
+	<CantidadLineasProduccion>4</CantidadLineasProduccion> 
 		<ListadoLineasProduccion> 
 			<LineaProduccion> 
 				<Numero>1</Numero> 
-				<CantidadComponentes>4</CantidadComponentes> 
-				<TiempoEnsamblaje>1</TiempoEnsamblaje> 
+				<CantidadComponentes>2</CantidadComponentes> 
+				<TiempoEnsamblaje>5</TiempoEnsamblaje> 
 			</LineaProduccion> 
 			<LineaProduccion> 
 				<Numero>2</Numero> 
 				<CantidadComponentes>6</CantidadComponentes> 
-				<TiempoEnsamblaje>1</TiempoEnsamblaje> 
+				<TiempoEnsamblaje>2</TiempoEnsamblaje> 
 			</LineaProduccion>
 		</ListadoLineasProduccion> 
 		<ListadoProductos> 
@@ -19,7 +19,7 @@
 			</Producto> 
 			<Producto> 
 				<nombre>Camara</nombre> 
-				<elaboracion>L1pC2p L2pC3p L1pC4p L2pC2p</elaboracion> 
+				<elaboracion>L1pC2p L2pC3p L1pC4p L2pC4p</elaboracion> 
 			</Producto>
 			<Producto> 
 				<nombre>USBStick</nombre> 

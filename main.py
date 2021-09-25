@@ -2,6 +2,7 @@ from ListaProceso import listaproceso
 from tkinter import Button, Tk,ttk,Label,filedialog
 from PIL import Image,ImageTk
 from xml.dom import minidom
+from copy import copy
 from ListaLineas import listalineas
 from Linea import linea
 from ListaProductos import listaproductos
@@ -98,7 +99,7 @@ def lecturaMaquina():
         numero=int(l.getElementsByTagName("numero")[0].firstChild.data)
         cantidadC=int(l.getElementsByTagName("cantidadcomponentes")[0].firstChild.data)
         tiempoE=int(l.getElementsByTagName("tiempoensamblaje")[0].firstChild.data)
-        nuevalinea=linea(numero,cantidadC)
+        nuevalinea=linea(numero,cantidadC,tiempoE)
         Lineas.insertar(nuevalinea)
         #print("Linea:",numero,"con:",cantidadC,"componentes y tarda en ensamblar:",tiempoE,"segundos")
     #Lineas.recorrer()
@@ -143,7 +144,11 @@ def lecturaMaquina():
                     progre.insertar(nuevoproceso)
                     estado=0
                     numero=""
-        nuevoproducto=producto(nombre,elaboracion,progre)
+        
+        nuevoproducto=producto(nombre,elaboracion,progre,Lineas,cantidadLineas)
+        nuevoproducto.reiniciarlineas()
+        nuevoproducto.procesar()
+        nuevoproducto.mostrarproceso()
         Productos.insertar(nuevoproducto)
         #print("producto:",nombre,"se elabora asi:",elaboracion)
     #Productos.recorrer()
