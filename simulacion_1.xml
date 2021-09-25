@@ -3,5 +3,6 @@
 	<ListadoProductos> 
 		<Producto>Smartwatch</Producto> 
 		<Producto>Camara</Producto>
+		<Producto>USBStick</Producto>
 	</ListadoProductos> 
 </Simulacion>

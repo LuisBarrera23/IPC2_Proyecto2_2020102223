@@ -18,3 +18,11 @@ class listasimulacion:
             print("Simulacion:",actual.simulacion.nombre)
             actual.simulacion.listadoproduc.recorrer()
             actual=actual.siguiente
+
+    def buscar(self,nombre):
+        actual=self.primero
+        while actual:
+            if actual.simulacion.nombre==nombre:
+                return actual.simulacion.listadoproduc
+            actual=actual.siguiente
+        return None

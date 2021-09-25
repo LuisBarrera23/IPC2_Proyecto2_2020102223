@@ -18,3 +18,11 @@ class listaproductos:
             print("Producto:",actual.producto.nombre,"elaboración:",actual.producto.strproceso)
             actual.producto.proceso.recorrer()
             actual=actual.siguiente
+
+    def buscar(self,nombre):
+        actual=self.primero
+        while actual:
+            if actual.producto.nombre==nombre:
+                return actual.producto
+            actual=actual.siguiente
+        return None
