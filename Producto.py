@@ -10,6 +10,7 @@ class producto:
         self.lineas=lineas
         self.cantidadlineas=cantidadlineas
         self.Tiempos=listatiempo()
+        self.Ttotal=0
 
     def procesar(self):
         self.Tiempos=listatiempo()
@@ -89,6 +90,7 @@ class producto:
                             ensamblado=True
                 lineaActual=lineaActual.siguiente
             procesoactual=procesoactual.siguiente
+        self.Ttotal=segundo
         print("producto ensamblado---------------------------------------")
 
     def reiniciarlineas(self):

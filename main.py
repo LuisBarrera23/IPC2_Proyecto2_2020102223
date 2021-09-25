@@ -89,7 +89,7 @@ def generarVentana():
     comboRsimulacion.configure(width=27)
 
     b3=Button(pestaña2,command=masivoHTML, text="Reporte Masivo HTML",font=("Verdana",12),borderwidth=5,background="beige").place(x=600,y=420,height=40,width=350)
-    b4=Button(pestaña2,text="Reporte Masivo XML",font=("Verdana",12),borderwidth=5,background="beige").place(x=600,y=470,height=40,width=350)
+    b4=Button(pestaña2,command=masivoXML,text="Reporte Masivo XML",font=("Verdana",12),borderwidth=5,background="beige").place(x=600,y=470,height=40,width=350)
 
     #contenido de pestaña 3 de Simulación
     global comboSsimulacion
@@ -347,7 +347,62 @@ def masivoHTML():
         #startfile("Reporte.html")
 
 def masivoXML():
-    pass
+    global comboRsimulacion,Simulaciones,Productos,cantidadL
+    simulacionseleccionada=comboRsimulacion.get()
+    if simulacionseleccionada=="" or simulacionseleccionada=="Seleccione una Simulacion":
+        if simulacionseleccionada=="":
+            messagebox.showerror(message="No se ha introducido archivo de simulacion",title="Error")
+            return
+        if simulacionseleccionada=="Seleccione una Simulacion":
+            messagebox.showerror(message="No ha seleccionado ninguna simulacion",title="Error")
+            return
+    else:
+        print(simulacionseleccionada)
+        productos=Simulaciones.buscar(simulacionseleccionada)
+        
+
+        f=open("Reporte.xml","w",encoding='UTF-8')
+        cadena=""
+        cadena+="<SalidaSimulacion>"
+        cadena+=f"\n\t<Nombre>\n\t\t{simulacionseleccionada}\n\t<Nombre>"
+        cadena+="\n\t<ListadoProductos>"
+
+        actualproducto=productos.primero
+        while actualproducto is not None:
+            cadena+="\n\t\t<Producto>"
+            produc=Productos.buscar(actualproducto.producto)
+            cadena+="\n\t\t\t<Nombre>"
+            cadena+="\n\t\t\t\t"+produc.nombre
+            cadena+="\n\t\t\t</Nombre>"
+            cadena+=f"\n\t\t\t<TiempoTotal>{str(produc.Ttotal)}</TiempoTotal>"
+            cadena+="\n\t\t\t<ElaboracionOptima>"
+            
+            procedimiento=produc.Tiempos
+            tiempoactual=procedimiento.primero
+            while tiempoactual is not None:
+                cadena+=f"\n\t\t\t\t<Tiempo NoSegundo=\"{tiempoactual.tiempo.segundo}\">"
+                acciones=tiempoactual.tiempo.acciones
+                accionactual=acciones.primero
+                contador=0
+                while accionactual is not None:
+                    contador+=1
+                    cadena+=f"\n\t\t\t\t\t<LineaEnsamblaje NoLinea=\"{contador}\">"
+                    cadena+="\n\t\t\t\t\t\t"+accionactual.accion
+                    cadena+="\n\t\t\t\t\t</LineaEnsamblaje>"
+                    accionactual=accionactual.siguiente
+                tiempoactual=tiempoactual.siguiente
+                cadena+="\n\t\t\t\t</Tiempo>"
+
+            cadena+="\n\t\t\t</ElaboracionOptima>"
+            cadena+="\n\t\t</Producto>"
+            actualproducto=actualproducto.siguiente
+        cadena+="\n\t</ListadoProductos>"
+        cadena+="\n</SalidaSimulacion>"
+        
+
+        f.write(cadena)
+        f.close()
+        #startfile("Reporte.html")
 #pestaña de simulacion----------------------------------------------------------
 def sIndividual(event):
     global comboSsimulacion
