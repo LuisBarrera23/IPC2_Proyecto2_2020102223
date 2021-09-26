@@ -88,6 +88,7 @@ class producto:
                                 nuevotiempo=tiempo(segundo,acciones)
                                 self.Tiempos.insertar(nuevotiempo)
                             ensamblado=True
+                            procesoactual.proceso.tiempoE=segundo
                 lineaActual=lineaActual.siguiente
             procesoactual=procesoactual.siguiente
         self.Ttotal=segundo
