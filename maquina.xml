@@ -1,10 +1,10 @@
 <Maquina> 
-	<CantidadLineasProduccion>4</CantidadLineasProduccion> 
+	<CantidadLineasProduccion>15</CantidadLineasProduccion> 
 		<ListadoLineasProduccion> 
 			<LineaProduccion> 
 				<Numero>1</Numero> 
 				<CantidadComponentes>2</CantidadComponentes> 
-				<TiempoEnsamblaje>5</TiempoEnsamblaje> 
+				<TiempoEnsamblaje>20</TiempoEnsamblaje> 
 			</LineaProduccion> 
 			<LineaProduccion> 
 				<Numero>2</Numero> 

@@ -1,7 +1,7 @@
 import tkinter
 from tkinter.constants import DISABLED, END, INSERT, WORD
 from ListaProceso import listaproceso
-from tkinter import Button, Tk,ttk,Label,filedialog,messagebox,Text
+from tkinter import Button, Frame, Scrollbar, Tk, XView,ttk,Label,filedialog,messagebox,Text,Canvas
 from PIL import Image,ImageTk
 from os import system,startfile
 from xml.dom import minidom
@@ -32,6 +32,8 @@ pestaña3 = ttk.Frame()
 b5=Button()
 b6=Button()
 b7=Button()
+tabla=ttk.Treeview()
+tabla_frame=Frame()
 
 #funciones complementarias
 def isNumero(C):
@@ -50,6 +52,7 @@ def generarVentana():
     global ventana,pestaña3
 
     ventana.configure(background="#008080")
+    ventana.resizable(0,0)
     ancho=1200
     alto=700
     x=ventana.winfo_screenwidth()
@@ -68,7 +71,6 @@ def generarVentana():
     pestaña2 = ttk.Frame(pestañas,style="TFrame")
     pestaña3 = ttk.Frame(pestañas,style="TFrame")
     pestaña4 = ttk.Frame(pestañas,style="TFrame")
-
     #contenido pestaña 1 de cargar archivos
     pestañas.add(pestaña1, text="Cargar Archivo")
     b1=Button(pestaña1,command=lecturaMaquina,text="Cargar XML Configuración de Maquina",font=("Verdana",12),borderwidth=5,background="beige").place(x=300,y=500,height=40,width=350)
@@ -101,7 +103,7 @@ def generarVentana():
     b4=Button(pestaña2,command=masivoXML,text="Reporte Masivo XML",font=("Verdana",12),borderwidth=5,background="beige").place(x=600,y=470,height=40,width=350)
 
     #contenido de pestaña 3 de Simulación
-    global comboSsimulacion
+    global comboSsimulacion,tabla_frame
     pestañas.add(pestaña3, text="Simulación por producto")
     Label(pestaña3,bg="#008080",fg="white",relief="flat" ,text="Simulacion individual", font=("arial italic", 30) ).pack()
     Label(pestaña3,bg="#008080",fg="white",relief="flat" ,text="Nombre de la Simulación", font=("arial italic", 18) ).place(x=20,y=115)
@@ -109,6 +111,8 @@ def generarVentana():
     comboSsimulacion.place(x=20,y=150)
     comboSsimulacion.configure(width=23)
     comboSsimulacion.bind('<<ComboboxSelected>>', sIndividual)
+    
+    
 
     global comboSnombre
     Label(pestaña3,bg="#008080",fg="white",relief="flat" ,text="Producto", font=("arial italic", 18) ).place(x=20,y=215)
@@ -122,11 +126,15 @@ def generarVentana():
     comboStiempo=ttk.Combobox(pestaña3,state="readonly",font=("arial italic", 18))
     comboStiempo.place(x=20,y=350)
     comboStiempo.configure(width=23)
+    comboStiempo.bind('<<ComboboxSelected>>', tIndividual)
 
     b5=Button(pestaña3,command=reportehtml,text="Reporte HTML",font=("Verdana",12),borderwidth=5,background="beige").place(x=20,y=450,height=40,width=280)
     b6=Button(pestaña3,command=reportexml,text="Reporte XML",font=("Verdana",12),borderwidth=5,background="beige").place(x=20,y=500,height=40,width=280)
     b7=Button(pestaña3,command=graficar,text="Reporte Graphviz",font=("Verdana",12),borderwidth=5,background="beige").place(x=20,y=550,height=40,width=280)
 
+
+    tabla_frame=Frame(pestaña3)
+    tabla_frame.place(x=400,y=70,width=780,height=600)
     #contenido de pestaña 4 de Ayuda
     pestañas.add(pestaña4, text="Ayuda")
     Label(pestaña4,bg="#008080",fg="yellow",relief="flat" ,text="Acerca de:", font=("arial italic", 18)).place(x=10,y=10)
@@ -155,6 +163,48 @@ def generarVentana():
 
     
     ventana.mainloop()
+
+def creartabla(produc):
+    global tabla,cantidadL,pestaña3,tabla_frame
+    
+    tabla=ttk.Treeview(tabla_frame,height=28)
+    
+
+    
+    print(produc.nombre)
+    #lista para columnas
+    columnas=[]
+    for i in range(cantidadL):
+        columnas.append("Linea "+str(i+1))
+    tabla["columns"]=tuple(columnas)
+    tabla.column("#0",width=120,minwidth=25)
+    tabla.heading("#0",text="Tiempo(s)",anchor=tkinter.CENTER)
+    for c in columnas:#configurando columnas
+        tabla.column(c,anchor=tkinter.CENTER,width=120)
+    for c in columnas:#estableciendo titulos de columnas
+        tabla.heading(c,text=c,anchor=tkinter.CENTER)
+
+    procedimiento=produc.Tiempos
+
+    tiempoactual=procedimiento.primero
+    iterador=0
+    while tiempoactual is not None:
+        acciones=tiempoactual.tiempo.acciones
+        accionactual=acciones.primero
+        contenido=[]
+        while accionactual is not None:
+            contenido.append(accionactual.accion)
+            accionactual=accionactual.siguiente
+        tabla.insert(parent="",index="end",iid=iterador,text=tiempoactual.tiempo.segundo,values=tuple(contenido))
+        tiempoactual=tiempoactual.siguiente
+        iterador+=1
+
+    scroll=Scrollbar(tabla_frame,orient=tkinter.HORIZONTAL,command=tabla.xview)
+    scroll.pack(side=tkinter.BOTTOM,fill=tkinter.X)
+    tabla.configure(xscrollcommand=scroll.set)
+    tabla.pack()
+  
+    
 
 def lecturaMaquina():
     global Lineas,Productos,cantidadL
@@ -461,7 +511,59 @@ def nIndividual(event):
         values = list(comboStiempo["values"])
         comboStiempo["values"] = values + [i+1]
     comboStiempo.set("Todo")
+    
+    creartabla(product)
 
+def tIndividual(event):
+    global tabla,cantidadL,pestaña3,tabla_frame,comboSnombre,Productos,comboStiempo
+    tabla_frame=Frame(pestaña3)
+    tabla_frame.place(x=400,y=70,width=780,height=600)
+    nombre=comboSnombre.get()
+    produc=Productos.buscar(nombre)
+    if(comboStiempo.get()=="Todo"):
+        tiempo=produc.Ttotal
+    else:
+        tiempo=int(comboStiempo.get())+1
+    print(nombre)
+    
+    tabla=ttk.Treeview(tabla_frame,height=28)
+    
+
+    
+    print(produc.nombre)
+    #lista para columnas
+    columnas=[]
+    for i in range(cantidadL):
+        columnas.append("Linea "+str(i+1))
+    tabla["columns"]=tuple(columnas)
+    tabla.column("#0",width=120,minwidth=25)
+    tabla.heading("#0",text="Tiempo(s)",anchor=tkinter.CENTER)
+    for c in columnas:#configurando columnas
+        tabla.column(c,anchor=tkinter.CENTER,width=120)
+    for c in columnas:#estableciendo titulos de columnas
+        tabla.heading(c,text=c,anchor=tkinter.CENTER)
+
+    procedimiento=produc.Tiempos
+
+    tiempoactual=procedimiento.primero
+    iterador=0
+    while tiempoactual is not None:
+        acciones=tiempoactual.tiempo.acciones
+        accionactual=acciones.primero
+        contenido=[]
+        while accionactual is not None:
+            contenido.append(accionactual.accion)
+            accionactual=accionactual.siguiente
+        tabla.insert(parent="",index="end",iid=iterador,text=tiempoactual.tiempo.segundo,values=tuple(contenido))
+        tiempoactual=tiempoactual.siguiente
+        if int(tiempoactual.tiempo.segundo)==tiempo:
+            break
+        iterador+=1
+
+    scroll=Scrollbar(tabla_frame,orient=tkinter.HORIZONTAL,command=tabla.xview)
+    scroll.pack(side=tkinter.BOTTOM,fill=tkinter.X)
+    tabla.configure(xscrollcommand=scroll.set)
+    tabla.pack()
     
 def reportehtml():
     global Productos,comboSsimulacion,comboSnombre,comboStiempo
