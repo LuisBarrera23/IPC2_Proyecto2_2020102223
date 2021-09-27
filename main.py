@@ -1,6 +1,9 @@
+import tkinter
+from tkinter.constants import DISABLED, END, INSERT, WORD
 from ListaProceso import listaproceso
-from tkinter import Button, Tk,ttk,Label,filedialog,messagebox
+from tkinter import Button, Tk,ttk,Label,filedialog,messagebox,Text
 from PIL import Image,ImageTk
+from os import system,startfile
 from xml.dom import minidom
 from copy import copy
 from ListaLineas import listalineas
@@ -126,9 +129,28 @@ def generarVentana():
 
     #contenido de pestaña 4 de Ayuda
     pestañas.add(pestaña4, text="Ayuda")
-
+    Label(pestaña4,bg="#008080",fg="yellow",relief="flat" ,text="Acerca de:", font=("arial italic", 18)).place(x=10,y=10)
+    texto=Text(pestaña4,bg="#008080",fg="white",height=27,width=40,font=("arial italic", 14),wrap=tkinter.WORD,highlightthickness=0,borderwidth=0)
+    texto.place(x=10,y=50)
+    acerca="La empresa Digital Intelligence, S. A. ha desarrollado una máquina capaz de ensamblar las partes de cualquier producto.\n\n Para esto se diseño este Software capaz de simular el ensamblaje de cualquiera de los productos que se requiera a travez de un archivo de configuracion de maquina y simular cualquier cantidad de productos por medio de otro archivo.\n\nLa máquina funciona de la siguiente forma: Se define un producto a ensamblar y se le da un conjunto instrucciones indicando la línea de producción y el componente que deben ser ensamblados para construir dicho producto. En cada segundo, un brazo robótico solamente puede moverse hacia adelante, moverse hacia atrás, ensamblar, o no hacer nada. Los brazos robóticos pueden accionarse simultáneamente, es decir, pueden moverse varios brazos a la vez, sin embargo, el proceso de ensamblaje si debe realizarse uno a la vez, ya que la construcción del producto requiere que se ensamble en el orden correcto."
+    texto.insert(tkinter.END,acerca)
+    texto.configure(state=DISABLED)
     
+    Label(pestaña4,bg="#008080",fg="yellow",relief="flat" ,text="Estudiante Desarrollador:", font=("arial italic", 18)).place(x=600,y=10)
+    texto1=Text(pestaña4,bg="#008080",fg="white",height=7,width=50,font=("arial italic", 14),wrap=tkinter.WORD,highlightthickness=0,borderwidth=0)
+    texto1.place(x=600,y=50)
+    acerca="Nombre: Luis Angel Barrera Velasquez\n\nCarnet: 202010223\n\nCarrera: Ingenieria en Ciencias y Sistemas\n\nCurso: Introducción a la Programación y Computación 2"
+    texto1.insert(tkinter.END,acerca)
+    texto1.configure(state=DISABLED)
 
+    img3=Image.open("complementos\Foto.png")
+    imagen3=ImageTk.PhotoImage(img3)
+    label=Label(pestaña4,bg="#008080",width=300,height=400,image=imagen3,anchor="center")
+    label.image=imagen3
+    label.place(x=700,y=220)
+    
+    
+    
     pestañas.pack(fill="both",expand="yes")
 
     
@@ -138,7 +160,7 @@ def lecturaMaquina():
     global Lineas,Productos,cantidadL
     Lineas=listalineas()
     Productos=listaproductos()
-    print("configuracion de la maquina")
+    #print("configuracion de la maquina")
     ruta=filedialog.askopenfile(
         title="Por favor seleccine un archivo",
         initialdir="./",
@@ -152,7 +174,7 @@ def lecturaMaquina():
 
     cantidadLineas=documento.getElementsByTagName("cantidadlineasproduccion")[0].firstChild.data
     cantidadL=int(cantidadLineas)
-    print("cantidad de lineas de produccion:",cantidadLineas)
+    #print("cantidad de lineas de produccion:",cantidadLineas)
     lLineas=documento.getElementsByTagName("lineaproduccion")
     for l in lLineas:
         numero=int(l.getElementsByTagName("numero")[0].firstChild.data)
@@ -207,7 +229,7 @@ def lecturaMaquina():
         nuevoproducto=producto(nombre,elaboracion,progre,Lineas,cantidadLineas)
         nuevoproducto.reiniciarlineas()
         nuevoproducto.procesar()
-        nuevoproducto.mostrarproceso()
+        #nuevoproducto.mostrarproceso()
         Productos.insertar(nuevoproducto)
         #print("producto:",nombre,"se elabora asi:",elaboracion)
     #Productos.recorrer()
@@ -217,7 +239,7 @@ def lecturaMaquina():
 #pestaña de reportes------------------------------------------------------------
 def lecturaSimulacion():
     global Simulaciones
-    print("estructurando simulación")
+    #print("estructurando simulación")
     ruta=filedialog.askopenfile(
         title="Por favor seleccine un archivo",
         initialdir="./",
@@ -272,7 +294,7 @@ def masivoHTML():
         productos=Simulaciones.buscar(simulacionseleccionada)
         
 
-        f=open("Reporte.html","w",encoding='UTF-8')
+        f=open(f"HTML\{simulacionseleccionada}ReporteMasivo.html","w",encoding='UTF-8')
         inicio="""
         <!doctype html>
         <html lang="en">
@@ -370,7 +392,7 @@ def masivoXML():
         productos=Simulaciones.buscar(simulacionseleccionada)
         
 
-        f=open("Reporte.xml","w",encoding='UTF-8')
+        f=open(f"XML\{simulacionseleccionada}ReporteMasivo.xml","w",encoding='UTF-8')
         cadena=""
         cadena+="<SalidaSimulacion>"
         cadena+=f"\n\t<Nombre>\n\t\t{simulacionseleccionada}\n\t<Nombre>"
@@ -456,7 +478,7 @@ def reportehtml():
             t=int(comboStiempo.get())
         
 
-        f=open(f"{produc.nombre}Reporte.html","w",encoding='UTF-8')
+        f=open(f"HTML\{produc.nombre}Reporte.html","w",encoding='UTF-8')
         inicio="""
         <!doctype html>
         <html lang="en">
@@ -554,7 +576,7 @@ def reportexml():
             t=int(comboStiempo.get())
         
 
-        f=open(f"{nproducto}Reporte.xml","w",encoding='UTF-8')
+        f=open(f"XML\{nproducto}Reporte.xml","w",encoding='UTF-8')
         cadena=""
         cadena+="<SalidaSimulacion>"
         cadena+=f"\n\t<Nombre>\n\t\t{nsimulacion}\n\t<Nombre>"
@@ -611,8 +633,9 @@ def graficar():
         else:
             t=int(comboStiempo.get())
         
-        f=open(f"{produc.nombre}Graphviz.dot","w",encoding='UTF-8')
+        f=open(f"Graphviz\dot\{produc.nombre}Graphviz.dot","w",encoding='UTF-8')
         cadena="""digraph G {
+        labelloc = "t"
         rankdir=LR
         node [shape=box]\n"""
 
@@ -622,7 +645,7 @@ def graficar():
             if tensamblado<=t:
                 cadena+="\nL"+str(procesoactual.proceso.linea)+"C"+str(procesoactual.proceso.componente)+"[style=filled, fillcolor=green]"
             else:
-                cadena+="\nL"+str(procesoactual.proceso.linea)+"C"+str(procesoactual.proceso.componente)+"[style=filled, fillcolor=white]"
+                cadena+="\nL"+str(procesoactual.proceso.linea)+"C"+str(procesoactual.proceso.componente)+"[style=filled, fillcolor=orange]"
             procesoactual=procesoactual.siguiente
         cadena+="\n"
         procesoactual=proces.primero
@@ -634,7 +657,10 @@ def graficar():
         cadena+="\n}"
         f.write(cadena)
         f.close()
-        print("gg")
+        original=f"Graphviz\dot\{produc.nombre}Graphviz.dot"
+        convertido=f"Graphviz\{produc.nombre}Graphviz.png"
+        system("dot -Tpng "+original+" -o "+convertido)
+        startfile(f"Graphviz\{produc.nombre}Graphviz.png")
 
 
 if __name__=='__main__':

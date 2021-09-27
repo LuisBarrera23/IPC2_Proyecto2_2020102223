@@ -92,7 +92,7 @@ class producto:
                 lineaActual=lineaActual.siguiente
             procesoactual=procesoactual.siguiente
         self.Ttotal=segundo
-        print("producto ensamblado---------------------------------------")
+        #print("producto ensamblado---------------------------------------")
 
     def reiniciarlineas(self):
         lineas=self.lineas 

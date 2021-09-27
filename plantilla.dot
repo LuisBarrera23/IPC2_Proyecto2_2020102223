@@ -1,9 +1,0 @@
-digraph G {
-  rankdir=LR
-  node [shape=box]
-  L1C2 [style=filled, fillcolor=green] 
-  L1C3 [style=filled, fillcolor=green] 
-  L2C4 [style=filled, fillcolor=white] 
-  L1C2 -> L1C3 -> L2C4
-  label=camara
-}

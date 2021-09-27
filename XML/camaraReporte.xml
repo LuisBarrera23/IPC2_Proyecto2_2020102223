@@ -5,9 +5,9 @@
 	<ListadoProductos>
 		<Producto>
 			<Nombre>
-				smartwatch
+				camara
 			</Nombre>
-			<TiempoTotal>20</TiempoTotal>
+			<TiempoTotal>22</TiempoTotal>
 			<ElaboracionOptima>
 				<Tiempo NoSegundo="1">
 					<LineaEnsamblaje NoLinea="1">
@@ -66,34 +66,6 @@
 					</LineaEnsamblaje>
 				</Tiempo>
 				<Tiempo NoSegundo="5">
-					<LineaEnsamblaje NoLinea="1">
-						Ensamblando C2
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="2">
-						No hacer nada
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="3">
-						No hacer nada
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="4">
-						No hacer nada
-					</LineaEnsamblaje>
-				</Tiempo>
-				<Tiempo NoSegundo="6">
-					<LineaEnsamblaje NoLinea="1">
-						Ensamblando C2
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="2">
-						No hacer nada
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="3">
-						No hacer nada
-					</LineaEnsamblaje>
-					<LineaEnsamblaje NoLinea="4">
-						No hacer nada
-					</LineaEnsamblaje>
-				</Tiempo>
-				<Tiempo NoSegundo="7">
 					<LineaEnsamblaje NoLinea="1">
 						Ensamblando C2
 					</LineaEnsamblaje>

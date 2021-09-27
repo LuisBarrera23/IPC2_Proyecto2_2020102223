@@ -1,0 +1,12 @@
+digraph G {
+        labelloc = "t"
+        rankdir=LR
+        node [shape=box]
+
+L1C2[style=filled, fillcolor=green]
+L2C3[style=filled, fillcolor=green]
+L1C4[style=filled, fillcolor=orange]
+L2C4[style=filled, fillcolor=orange]
+L1C2->L2C3->L1C4->L2C4
+label=camara
+}

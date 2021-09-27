@@ -1,0 +1,9 @@
+digraph G {
+        rankdir=LR
+        node [shape=box]
+
+L1C1[style=filled, fillcolor=green]
+L2C3[style=filled, fillcolor=orange]
+L1C1->L2C3
+label=usbstick
+}
